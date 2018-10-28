@@ -46,7 +46,8 @@ public class Form {
 
 	public Form() {
     	
-// ***************** La zone de texte **********************************
+		// ***************** La zone de texte **********************************
+		
         Font police = new Font("Arial", Font.BOLD, 14);
         // 1er
         jtf_1.setFont(police);
@@ -69,10 +70,12 @@ public class Form {
         left.add(label_4);
         left.add(jtf_4);       
         
-//***************** Zone resultats ***************************************
+        
+        //***************** Zone resultats ***************************************
+        
         right.add(res);
 
-// ***************** Le bouton *******************************************
+        // ***************** Le bouton *******************************************
 
         JButton btn = new JButton("Valider");
         
