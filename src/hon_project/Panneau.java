@@ -22,7 +22,7 @@ public class Panneau extends JPanel {
 
         try {
         	
-            Image img = ImageIO.read(new File ("/home/romain/master_2/java_workspace/hon_project/src/hon_project/2695.png"));
+            Image img = ImageIO.read(new File ("img/2695.png"));
             
             //On met l'image au milieu avec Graphics2D
             Graphics2D g2d = (Graphics2D) g;
