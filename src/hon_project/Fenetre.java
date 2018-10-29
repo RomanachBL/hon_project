@@ -16,7 +16,7 @@ public class Fenetre extends JFrame {
     
     // On récupère 'Left' et 'Right' grâce aux getters de la classe 'Form'
     JPanel left = form.getLeft();
-    JPanel right = form.getRight();
+    //JPanel right = form.getRight();
     
     public Fenetre(){
     	
@@ -41,13 +41,13 @@ public class Fenetre extends JFrame {
 
 		// On donne les dimensions de 'panneau', 'left' et 'right'
         panneau.setBounds(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
-        left.setBounds(50, 100, 350, 200); 
-        right.setBounds(0, 100, (int) dim.getWidth(), 50);
+        left.setBounds(100, 100, 350, 600); 
+        //right.setBounds(0, 100, (int) dim.getWidth(), 50);
 
 		// On dit que left sera un GridLayout
-        GridLayout grid = new GridLayout(5, 0);
+        GridLayout grid = new GridLayout(13, 0);
         left.setLayout(grid);
-        grid.setVgap(20);
+        grid.setVgap(25);
 
      	// ############################# END #######################################
      	
@@ -55,7 +55,7 @@ public class Fenetre extends JFrame {
         // ***************** On 'add' tout dans le container  **********************
         container.add(panneau);  
         container.add(left, new Integer(1));
-        container.add(right, new Integer(1));
+        //container.add(right, new Integer(1));
         
         // *************************************************************************
         
