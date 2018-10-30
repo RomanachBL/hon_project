@@ -1,14 +1,20 @@
 package hon_project;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,10 +28,12 @@ public class Form {
 	private JLabel label_ifa = new JLabel("IFA : ");
 	private JCheckBox cb_ifa = new JCheckBox();
 	private JLabel label_km = new JLabel("IK : ");
-	private JTextField jtf_km = new JTextField();
+	private JFormattedTextField jtf_km = new JFormattedTextField(NumberFormat.getNumberInstance());
 	
 	private JLabel label_ami = new JLabel("AMI (1) :");
 	private JComboBox combo_ami = new JComboBox();	
+	private JLabel label_ami2 = new JLabel("AMI (2) :");
+	private JComboBox combo_ami2 = new JComboBox();	
 	private JLabel label_ais = new JLabel("AIS :");
 	private JComboBox combo_ais = new JComboBox();	
 	
@@ -58,7 +66,7 @@ public class Form {
 	}
 */
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public Form() {
     	
 		// ***************** La zone du form **********************************
@@ -69,16 +77,39 @@ public class Form {
         jtf_nom.setPreferredSize(new Dimension(100, 40));
         left.add(label_nom);
         left.add(jtf_nom);
+        
         // IFA
         left.add(label_ifa);
         left.add(cb_ifa);
+              
         // KM
         jtf_km.setFont(police);
-        jtf_km.setPreferredSize(new Dimension(100, 40));
+        jtf_km.setPreferredSize(new Dimension(100, 40));    
+        jtf_km.disable();
+        jtf_km.setBackground(Color.LIGHT_GRAY);
+        label_km.setForeground(Color.LIGHT_GRAY);
+        
+        cb_ifa.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    jtf_km.enable();
+                    jtf_km.setBackground(Color.WHITE);
+                    label_km.setForeground(Color.BLACK);
+                } else {
+                	jtf_km.disable();
+                	jtf_km.setBackground(Color.LIGHT_GRAY);
+                	label_km.setForeground(Color.LIGHT_GRAY);
+                };
+            }
+        });
+        
         left.add(label_km);
-        left.add(jtf_km);
-        // AMI
+        left.add(jtf_km);  
+    
+        // AMI 1
         combo_ami.setPreferredSize(new Dimension(100, 20));
+        combo_ami.addItem("");
         combo_ami.addItem("1");
         combo_ami.addItem("1.25");
         combo_ami.addItem("1.5");
@@ -94,8 +125,48 @@ public class Form {
         combo_ami.setPreferredSize(new Dimension(100, 20));
         left.add(label_ami);
         left.add(combo_ami);
+        
+        // AMI 2
+        combo_ami2.setPreferredSize(new Dimension(100, 20));
+        combo_ami2.addItem("");
+        combo_ami2.addItem("0.5");
+        combo_ami2.addItem("0.625");
+        combo_ami2.addItem("0.75");
+        combo_ami2.addItem("1");
+        combo_ami2.addItem("1.125");
+        combo_ami2.addItem("1.25");
+        combo_ami2.addItem("1.5");
+        combo_ami2.addItem("1.75");
+        combo_ami2.addItem("2");
+        combo_ami2.addItem("2.05");
+        combo_ami2.addItem("2.25");
+        combo_ami2.addItem("7.5");
+        combo_ami2.setPreferredSize(new Dimension(100, 20));
+        
+        combo_ami2.disable();
+        combo_ami2.setBackground(Color.LIGHT_GRAY);
+        label_ami2.setForeground(Color.LIGHT_GRAY);       
+        
+        combo_ami.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                if(combo_ami.getSelectedItem().equals("")) {
+                	combo_ami2.disable();
+                    combo_ami2.setBackground(Color.LIGHT_GRAY);
+                    label_ami2.setForeground(Color.LIGHT_GRAY);
+                } else {
+                	combo_ami2.enable();
+                    combo_ami2.setBackground(Color.WHITE);
+                    label_ami2.setForeground(Color.BLACK);
+                }
+            }
+        });
+        
+        left.add(label_ami2);
+        left.add(combo_ami2);
+        
         // AIS
         combo_ais.setPreferredSize(new Dimension(100, 20));
+        combo_ais.addItem("");
         combo_ais.addItem("1");
         combo_ais.addItem("2");
         combo_ais.addItem("3");
@@ -103,15 +174,19 @@ public class Form {
         combo_ais.setPreferredSize(new Dimension(100, 20));
         left.add(label_ais);
         left.add(combo_ais);
+        
         // MAU
         left.add(label_mau);
         left.add(cb_mau);
+        
         // MCI
         left.add(label_mci);
         left.add(cb_mci);
+        
         //D, JF
         left.add(label_jfd);
         left.add(cb_jfd);
+        
         // Nuit
         left.add(label_nuit);
         left.add(cb_nuit);
@@ -138,7 +213,5 @@ public class Form {
         });
         
         left.add(btn);
-
-     	
 	}
 }
