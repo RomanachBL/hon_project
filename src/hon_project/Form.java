@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Form {
+	private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.00");
 	
 	// Left -> On initialise les zones de textes et leurs labels
     private JPanel left = new JPanel();
@@ -109,7 +110,7 @@ public class Form {
     
         // AMI 1
         combo_ami.setPreferredSize(new Dimension(100, 20));
-        combo_ami.addItem("");
+        combo_ami.addItem("0");
         combo_ami.addItem("1");
         combo_ami.addItem("1.25");
         combo_ami.addItem("1.5");
@@ -128,7 +129,7 @@ public class Form {
         
         // AMI 2
         combo_ami2.setPreferredSize(new Dimension(100, 20));
-        combo_ami2.addItem("");
+        combo_ami2.addItem("0");
         combo_ami2.addItem("0.5");
         combo_ami2.addItem("0.625");
         combo_ami2.addItem("0.75");
@@ -149,7 +150,7 @@ public class Form {
         
         combo_ami.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                if(combo_ami.getSelectedItem().equals("")) {
+                if(combo_ami.getSelectedItem().equals("0")) {
                 	combo_ami2.disable();
                     combo_ami2.setBackground(Color.LIGHT_GRAY);
                     label_ami2.setForeground(Color.LIGHT_GRAY);
@@ -166,7 +167,7 @@ public class Form {
         
         // AIS
         combo_ais.setPreferredSize(new Dimension(100, 20));
-        combo_ais.addItem("");
+        combo_ais.addItem("0");
         combo_ais.addItem("1");
         combo_ais.addItem("2");
         combo_ais.addItem("3");
@@ -192,24 +193,49 @@ public class Form {
         left.add(cb_nuit);
         
         
-        //***************** Zone resultats ***************************************
+        //***************** Resultats ***************************************
         
-        //right.add(res);
+        
 
         // ***************** Le bouton *******************************************
 
         JButton btn = new JButton("Valider");
-        
+                    
         btn.addActionListener(new ActionListener() { 
-        	public void actionPerformed(ActionEvent e) { 
-        	/*	double x, y, z;
-        		x = Double.valueOf(jtf_2.getText()); // dist
-        		y = Double.valueOf(jtf_3.getText()); // Essence
-        		z = Double.valueOf(jtf_4.getText()); // Consommation
-        	    //System.out.println(x+y+z);
-        	    
-        	    res.setText("Le trajet pour aller à/chez " + jtf_nom.getText() + " me coute " + DECIMAL_FORMAT.format(y*((x)/(100/z))) + " € l'aller et " + DECIMAL_FORMAT.format(y*((x+x)/(100/z))) + " € aller/retour");
-*/        	} 
+        	public void actionPerformed(ActionEvent event) { 
+        		
+        		//Récupération des variables
+        		String name = jtf_nom.getText();
+        		double ifa = 0; 
+        		if(cb_ifa.isSelected()) {ifa = 2.5; }else{ ifa = 0; }
+
+        		double ik = 0; 
+        		if(jtf_km.getText().equals("")){ 
+        			ik = 0; 
+        		}else{
+        			ik = Double.valueOf(jtf_km.getText()); 
+        		}
+        		
+				double ami1 = Double.valueOf(combo_ami.getSelectedItem().toString());
+        		double ami2 = Double.valueOf(combo_ami2.getSelectedItem().toString());
+        		double ais = Double.valueOf(combo_ais.getSelectedItem().toString());
+        		double mau = 0; if(cb_mau.isSelected()){ mau = 1.35; }else{ mau = 0; }
+        		double mci = 0;	if(cb_mci.isSelected()){ mci = 5; }else{ mci = 0; }
+        		double jfd = 0; if(cb_jfd.isSelected()){ jfd = 8.5; }else{ jfd = 0; }
+        		double nuit = 0; if(cb_nuit.isSelected()){ nuit = 9.15; }else{ nuit = 0; }
+
+        		// Le calcul
+        		double calc = (ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit);
+        		final NumberFormat instance = NumberFormat.getNumberInstance();
+        		instance.setMaximumFractionDigits(2);
+        		String s=instance.format(calc); 
+        		
+        		// Et on affiche dans le terminal ... pour l'instant :)       		
+        		System.out.println("Total pour  +name+ ->  +(ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit)+  €");
+        		System.out.println("-----------------------------------------------------------------------------------------------");
+        		System.out.println("Total pour "+name+"-> "+s+" €");
+	        		
+        	} 
         });
         
         left.add(btn);
