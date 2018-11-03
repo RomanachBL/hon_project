@@ -270,15 +270,32 @@ public class Form {
                     // 1) Instanciation de l'objet
                     fich = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
                   
+                    System.out.println("Fichier texte créé !\n\r");
+                    
                     try {
-                      
-                         // 2) Utilisation de l'objet
-                         fich.write(name+" -> IFA : "+ifa_n+"("+ifa+") ; IK : "+ik+"("+DECIMAL_FORMAT.format(0.35*ik)+") ; AMI 1 : "+ami1+"("+DECIMAL_FORMAT.format(3.15*ami1)+") ; AMI 1 : "+ami2+"("+DECIMAL_FORMAT.format(3.15*ami2)+") ; AMI 1 : "+ais+"("+DECIMAL_FORMAT.format(2.65*ais)+") ; MAU : "+mau_n+"("+mau+") ; MCI : "+mci_n+"("+mci+") ; Dim. Ferié : "+jfd_n+"("+jfd+") ; Nuit : "+nuit_n+"("+nuit+") || Total = "+total+" €\n\r");
+
+                    	// =============> On affiche l'en-tête s'il n'y est pas 
+                    	if (file.length() == 0) {
+                    		fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                    		fich.write("    NOM    | IFA | IK | AMI1 | AMI2 | AIS | MAU | MCI | Dim. JF | NUIT || Total \n");
+                    		fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                    		fich.write("--------------------------------------------------------------------------------\n");
+                    	}
+                    	
+                    	// On gère le nombre de caractères des variables
+                    	//String.format("%-10s", name);
+                    	
+                        // 2) Utilisation de l'objet
+                    	fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                    	fich.write(" "+String.format("%-10s", name)+"| "+ifa_n+" |"+DECIMAL_FORMAT.format(0.35*ik)+"| "+DECIMAL_FORMAT.format(3.15*ami1)+" | "+DECIMAL_FORMAT.format(3.15*ami2)+" |"+DECIMAL_FORMAT.format(2.65*ais)+" | "+mau_n+" | "+mci_n+" |   "+jfd_n+"   | "+nuit_n+"  || "+total+"\n");
+                    	fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                		fich.write("--------------------------------------------------------------------------------\n");
+                        //fich.write(name+" -> IFA : "+ifa_n+"("+ifa+") ; IK : "+ik+"("+DECIMAL_FORMAT.format(0.35*ik)+") ; AMI 1 : "+ami1+"("+DECIMAL_FORMAT.format(3.15*ami1)+") ; AMI 2 : "+ami2+"("+DECIMAL_FORMAT.format(3.15*ami2)+") ; AMI 1 : "+ais+"("+DECIMAL_FORMAT.format(2.65*ais)+") ; MAU : "+mau_n+"("+mau+") ; MCI : "+mci_n+"("+mci+") ; Dim. Ferié : "+jfd_n+"("+jfd+") ; Nuit : "+nuit_n+"("+nuit+") || Total = "+total+" €\n\r");
                       
                     } finally {
                       
-                         // 3) Libération de la ressource exploitée par l'objet
-                         fich.close();
+                        // 3) Libération de la ressource exploitée par l'objet
+                        fich.close();
                       
                     }
                   
