@@ -7,7 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -29,8 +37,8 @@ public class Form {
 	private JLabel label_ifa = new JLabel("IFA : ");
 	private JCheckBox cb_ifa = new JCheckBox();
 	private JLabel label_km = new JLabel("IK : ");
-	private JFormattedTextField jtf_km = new JFormattedTextField(NumberFormat.getNumberInstance());
-	
+	private JTextField jtf_km = new JTextField();
+
 	private JLabel label_ami = new JLabel("AMI (1) :");
 	private JComboBox combo_ami = new JComboBox();	
 	private JLabel label_ami2 = new JLabel("AMI (2) :");
@@ -46,6 +54,9 @@ public class Form {
 	private JCheckBox cb_jfd = new JCheckBox();
 	private JLabel label_nuit = new JLabel("Nuit : ");
 	private JCheckBox cb_nuit = new JCheckBox();
+	private JLabel label_file = new JLabel("Nom du fichier : ");
+	private JTextField jtf_file = new JTextField();
+	
 
 	// Right _> La zone résultat
     //private JPanel right = new JPanel();
@@ -123,12 +134,12 @@ public class Form {
         combo_ami.addItem("4.1");
         combo_ami.addItem("4.5");
         combo_ami.addItem("15");
-        combo_ami.setPreferredSize(new Dimension(100, 20));
+        combo_ami.setPreferredSize(new Dimension(100, 15));
         left.add(label_ami);
         left.add(combo_ami);
         
         // AMI 2
-        combo_ami2.setPreferredSize(new Dimension(100, 20));
+        combo_ami2.setPreferredSize(new Dimension(100, 15));
         combo_ami2.addItem("0");
         combo_ami2.addItem("0.5");
         combo_ami2.addItem("0.625");
@@ -142,7 +153,7 @@ public class Form {
         combo_ami2.addItem("2.05");
         combo_ami2.addItem("2.25");
         combo_ami2.addItem("7.5");
-        combo_ami2.setPreferredSize(new Dimension(100, 20));
+        combo_ami2.setPreferredSize(new Dimension(100, 15));
         
         combo_ami2.disable();
         combo_ami2.setBackground(Color.LIGHT_GRAY);
@@ -166,13 +177,13 @@ public class Form {
         left.add(combo_ami2);
         
         // AIS
-        combo_ais.setPreferredSize(new Dimension(100, 20));
+        combo_ais.setPreferredSize(new Dimension(100, 15));
         combo_ais.addItem("0");
         combo_ais.addItem("1");
         combo_ais.addItem("2");
         combo_ais.addItem("3");
         combo_ais.addItem("4");
-        combo_ais.setPreferredSize(new Dimension(100, 20));
+        combo_ais.setPreferredSize(new Dimension(100, 15));
         left.add(label_ais);
         left.add(combo_ais);
         
@@ -192,6 +203,13 @@ public class Form {
         left.add(label_nuit);
         left.add(cb_nuit);
         
+     // KM
+        jtf_file.setFont(police);
+        jtf_file.setPreferredSize(new Dimension(100, 15));    
+        
+        left.add(label_file);
+        left.add(jtf_file);  
+        
         
         //***************** Resultats ***************************************
         
@@ -206,8 +224,10 @@ public class Form {
         		
         		//Récupération des variables
         		String name = jtf_nom.getText();
+        		
+        		String ifa_n;
         		double ifa = 0; 
-        		if(cb_ifa.isSelected()) {ifa = 2.5; }else{ ifa = 0; }
+        		if(cb_ifa.isSelected()) {ifa = 2.5; ifa_n = "oui"; }else{ ifa = 0; ifa_n = "non"; }
 
         		double ik = 0; 
         		if(jtf_km.getText().equals("")){ 
@@ -219,22 +239,67 @@ public class Form {
 				double ami1 = Double.valueOf(combo_ami.getSelectedItem().toString());
         		double ami2 = Double.valueOf(combo_ami2.getSelectedItem().toString());
         		double ais = Double.valueOf(combo_ais.getSelectedItem().toString());
-        		double mau = 0; if(cb_mau.isSelected()){ mau = 1.35; }else{ mau = 0; }
-        		double mci = 0;	if(cb_mci.isSelected()){ mci = 5; }else{ mci = 0; }
-        		double jfd = 0; if(cb_jfd.isSelected()){ jfd = 8.5; }else{ jfd = 0; }
-        		double nuit = 0; if(cb_nuit.isSelected()){ nuit = 9.15; }else{ nuit = 0; }
+        		String mau_n;
+        		double mau = 0; if(cb_mau.isSelected()){ mau = 1.35; mau_n = "oui"; }else{ mau = 0; mau_n = "non"; }
+        		String mci_n;
+        		double mci = 0;	if(cb_mci.isSelected()){ mci = 5; mci_n = "oui"; }else{ mci = 0; mci_n = "non"; }
+        		String jfd_n;
+        		double jfd = 0; if(cb_jfd.isSelected()){ jfd = 8.5; jfd_n = "oui"; }else{ jfd = 0; jfd_n = "non"; }
+        		String nuit_n;
+        		double nuit = 0; if(cb_nuit.isSelected()){ nuit = 9.15; nuit_n = "oui"; }else{ nuit = 0; nuit_n = "non"; }
 
         		// Le calcul
         		double calc = (ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit);
         		final NumberFormat instance = NumberFormat.getNumberInstance();
         		instance.setMaximumFractionDigits(2);
-        		String s=instance.format(calc); 
+        		String total=instance.format(calc); 
         		
         		// Et on affiche dans le terminal ... pour l'instant :)       		
-        		System.out.println("Total pour  +name+ ->  +(ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit)+  €");
-        		System.out.println("-----------------------------------------------------------------------------------------------");
-        		System.out.println("Total pour "+name+"-> "+s+" €");
-	        		
+        		//System.out.println("Total pour  +name+ ->  +(ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit)+  €");
+        		//System.out.println("-----------------------------------------------------------------------------------------------");
+        		System.out.println("Total pour "+name+" -> "+total+" €");
+        		
+        		// ############## Ecriture dans le fichier texte ################
+        		
+        		try {
+                    String myFile = jtf_file.getText()+".txt";
+        			File file = new File (myFile);
+        			
+        			PrintWriter fich;
+        			
+                    // 1) Instanciation de l'objet
+                    fich = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+                  
+                    try {
+                      
+                         // 2) Utilisation de l'objet
+                         fich.write(name+" -> IFA : "+ifa_n+"("+ifa+") ; IK : "+ik+"("+DECIMAL_FORMAT.format(0.35*ik)+") ; AMI 1 : "+ami1+"("+DECIMAL_FORMAT.format(3.15*ami1)+") ; AMI 1 : "+ami2+"("+DECIMAL_FORMAT.format(3.15*ami2)+") ; AMI 1 : "+ais+"("+DECIMAL_FORMAT.format(2.65*ais)+") ; MAU : "+mau_n+"("+mau+") ; MCI : "+mci_n+"("+mci+") ; Dim. Ferié : "+jfd_n+"("+jfd+") ; Nuit : "+nuit_n+"("+nuit+") || Total = "+total+" €\n\r");
+                      
+                    } finally {
+                      
+                         // 3) Libération de la ressource exploitée par l'objet
+                         fich.close();
+                      
+                    }
+                  
+        		} catch (IOException e) {
+                    e.printStackTrace();
+        		}
+        	    
+        		// ############## Fin Ecriture !!!!!! ################ 
+        		
+        		// On réinitialise les champs
+        		jtf_nom.setText("");
+        		jtf_km.setText("");
+        		cb_ifa.setSelected(false);
+        		cb_mau.setSelected(false);
+        		cb_mci.setSelected(false);
+        		cb_jfd.setSelected(false);
+        		cb_nuit.setSelected(false);
+        		combo_ami.setSelectedIndex(0);
+        		combo_ami2.setSelectedIndex(0);
+        		combo_ais.setSelectedIndex(0);
+        	
         	} 
         });
         

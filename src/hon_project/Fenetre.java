@@ -45,9 +45,9 @@ public class Fenetre extends JFrame {
         //right.setBounds(0, 100, (int) dim.getWidth(), 50);
 
 		// On dit que left sera un GridLayout
-        GridLayout grid = new GridLayout(14, 0);
+        GridLayout grid = new GridLayout(15, 0);
         left.setLayout(grid);
-        grid.setVgap(25);
+        grid.setVgap(15);
 
      	// ############################# END #######################################
      	
