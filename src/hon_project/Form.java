@@ -1,12 +1,14 @@
 package hon_project;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,9 +16,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StreamTokenizer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,7 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Form {
-	private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.00");
+	private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##,##00.00");
 	
 	// Left -> On initialise les zones de textes et leurs labels
     private JPanel left = new JPanel();
@@ -220,7 +229,9 @@ public class Form {
         JButton btn = new JButton("Valider");
                     
         btn.addActionListener(new ActionListener() { 
-        	public void actionPerformed(ActionEvent event) { 
+        	private BufferedReader br;
+
+			public void actionPerformed(ActionEvent event) { 
         		
         		//Récupération des variables
         		String name = jtf_nom.getText();
@@ -252,12 +263,12 @@ public class Form {
         		double calc = (ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit);
         		final NumberFormat instance = NumberFormat.getNumberInstance();
         		instance.setMaximumFractionDigits(2);
-        		String total=instance.format(calc); 
+        		String res=instance.format(calc); 
         		
         		// Et on affiche dans le terminal ... pour l'instant :)       		
         		//System.out.println("Total pour  +name+ ->  +(ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit)+  €");
         		//System.out.println("-----------------------------------------------------------------------------------------------");
-        		System.out.println("Total pour "+name+" -> "+total+" €");
+        		System.out.println("Total pour "+name+" -> "+res+" €");
         		
         		// ############## Ecriture dans le fichier texte ################
         		
@@ -276,9 +287,9 @@ public class Form {
 
                     	// =============> On affiche l'en-tête s'il n'y est pas 
                     	if (file.length() == 0) {
-                    		fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
-                    		fich.write("    NOM    | IFA | IK | AMI1 | AMI2 | AIS | MAU | MCI | Dim. JF | NUIT || Total \n");
-                    		fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                    		fich.write("           |     |     |      |      |     |     |     |        |      ||       \n");
+                    		fich.write("    NOM    | IFA | IK  | AMI1 | AMI2 | AIS | MAU | MCI | Dim.JF | NUIT || Total \n");
+                    		fich.write("           |     |     |      |      |     |     |     |        |      ||       \n");
                     		fich.write("--------------------------------------------------------------------------------\n");
                     	}
                     	
@@ -286,17 +297,35 @@ public class Form {
                     	//String.format("%-10s", name);
                     	
                         // 2) Utilisation de l'objet
-                    	fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
-                    	fich.write(" "+String.format("%-10s", name)+"| "+ifa_n+" |"+DECIMAL_FORMAT.format(0.35*ik)+"| "+DECIMAL_FORMAT.format(3.15*ami1)+" | "+DECIMAL_FORMAT.format(3.15*ami2)+" |"+DECIMAL_FORMAT.format(2.65*ais)+" | "+mau_n+" | "+mci_n+" |   "+jfd_n+"   | "+nuit_n+"  || "+total+"\n");
-                    	fich.write("           |     |    |      |      |     |     |     |         |      ||       \n");
+                    	fich.write("           |     |     |      |      |     |     |     |        |      ||       \n");
+                    	fich.write(String.format("%-11.10s", name)+"| "+ifa_n+" |"+DECIMAL_FORMAT.format(0.35*ik)+"|"+DECIMAL_FORMAT.format(3.15*ami1)+" |"+DECIMAL_FORMAT.format(3.15*ami2)+" |"+DECIMAL_FORMAT.format(2.65*ais)+"| "+mau_n+" | "+mci_n+" |  "+jfd_n+"   | "+nuit_n+"  ||"+res+"€\n");
+                    	fich.write("           |     |     |      |      |     |     |     |        |      ||       \n");
                 		fich.write("--------------------------------------------------------------------------------\n");
                         //fich.write(name+" -> IFA : "+ifa_n+"("+ifa+") ; IK : "+ik+"("+DECIMAL_FORMAT.format(0.35*ik)+") ; AMI 1 : "+ami1+"("+DECIMAL_FORMAT.format(3.15*ami1)+") ; AMI 2 : "+ami2+"("+DECIMAL_FORMAT.format(3.15*ami2)+") ; AMI 1 : "+ais+"("+DECIMAL_FORMAT.format(2.65*ais)+") ; MAU : "+mau_n+"("+mau+") ; MCI : "+mci_n+"("+mci+") ; Dim. Ferié : "+jfd_n+"("+jfd+") ; Nuit : "+nuit_n+"("+nuit+") || Total = "+total+" €\n\r");
-                      
+/*
+                		FileReader fr = new FileReader(file);
+                		br = new BufferedReader(fr);
+                		
+                		int compt=0;
+                		String line=null;
+                		while((line=br.readLine())!=null){
+                		   StringTokenizer st=new StringTokenizer(line);
+                		   while(st.hasMoreTokens()){
+                		      if(st.nextToken().equals("->")){
+                		         compt++;
+                		      }
+                		   }
+                		}
+                		System.out.println("Le mot a été trouvé "+compt+" fois.\r");
+*/
+// #### Trouver le moyen de modifier le total !!!!!! ( JSON ? Fichier txt ? SharedPref? )     /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
+                		double total = 0;
+                		total += calc;
+                		fich.write("-> Res = "+total+" €\n");
+                		
                     } finally {
-                      
                         // 3) Libération de la ressource exploitée par l'objet
-                        fich.close();
-                      
+                        fich.close();  
                     }
                   
         		} catch (IOException e) {
