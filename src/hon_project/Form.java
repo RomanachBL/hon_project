@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.poi.hssf.record.formula.functions.Cell;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -281,7 +282,7 @@ public class Form {
         		// Et on affiche dans le terminal ... pour l'instant :)       		
         		//System.out.println("Total pour  +name+ ->  +(ifa+(0.35*ik)+(3.15*ami1)+(3.15*ami2)+(2.65*ais)+mau+mci+jfd+nuit)+  €");
         		//System.out.println("-----------------------------------------------------------------------------------------------");
-        		System.out.println("Total pour "+name+" -> "+res+" €");
+        		//System.out.println("Total pour "+name+" -> "+res+" €");
         		
 
         		// ############## Ecriture dans le fichier texte ################
@@ -347,37 +348,54 @@ public class Form {
                 
                 
                 ////////// Les chiffres (POUR L'INSTANT DES TESTS)
-                double a = 2.236548;
-                double b = 5.22562;
+                double a = 23.236548;
+                double b = 55.22562;
                 
-                HSSFRow row_2 = sheet.createRow(1);
-                HSSFRow row_3 = sheet.createRow(2);
-                HSSFRow row_res = sheet.createRow(3);
+                int cpt = 1;
+                int cpt_test = 0;
+               
+                HSSFRow row_test = sheet.createRow(cpt);
+                /*
+                while (cpt_test == 0) {
+	                if(row_test.getCell(0) == null || row_test.getCell(0).getCellType() == HSSFCell.CELL_TYPE_BLANK) {
+		                cpt_test ++;
+		                System.out.println("## Ici ma cellule est VIDE donc on sort car cpt_test = "+cpt_test);
+	                } else {
+	                	cpt ++;
+	                	System.out.println("## Ici ma cellule n'est PAS vide donc cpt vaut maintenant "+cpt);
+	                }
+                }
+                */
+                if(row_test.getCell(0) == null || row_test.getCell(0).getCellType() == HSSFCell.CELL_TYPE_BLANK) {
+	                System.out.println("## Ici ma cellule est VIDE donc on sort car cpt_test = "+cpt_test);
+                } else {
+                	System.out.println("## Ici ma cellule n'est PAS vide donc cpt vaut maintenant "+cpt);
+                }
                 
+                System.out.println("# LE CPT = "+cpt);
                 HSSFCellStyle cellStyle = null;
-                
                 HSSFCell cell_2 = null;
-                cell_2 = row_2.createCell((short)0);
+                HSSFRow row = sheet.createRow(cpt);
+                
+                cell_2 = row.createCell((short)0);
                 cell_2.setCellValue(a);
                 cellStyle = wb.createCellStyle();
                 cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
                 cell_2.setCellStyle(cellStyle);
                 
-                HSSFCell cell_3 = null;
-                cell_3 = row_3.createCell((short)0);
-                cell_3.setCellValue(b);
+                cell_2 = row.createCell((short)1);
+                cell_2.setCellValue(b);
                 cellStyle = wb.createCellStyle();
                 cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
-                cell_3.setCellStyle(cellStyle);
+                cell_2.setCellStyle(cellStyle);
                 
-                HSSFCell cell_4 = null;
-                cell_4 = row_res.createCell((short)0);
-                cell_4.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                cell_4.setCellFormula("SUM(A2:A3)");
+                cell_2 = row.createCell((short)2);
+                cell_2.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+                cell_2.setCellFormula("SUM(A2:B2)");
                 cellStyle = wb.createCellStyle();
                 cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
-                cell_4.setCellStyle(cellStyle);
-               
+                cell_2.setCellStyle(cellStyle);
+	            
 /*
                 HSSFCell cell2 = row2.createCell((short)0);
                 cell2.setCellValue(DECIMAL_FORMAT.format());
