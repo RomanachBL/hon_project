@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -27,6 +28,8 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.*;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -287,165 +290,243 @@ public class Form {
 
         		// ############## Ecriture dans le fichier texte ################
         		
-        		HSSFWorkbook wb = new HSSFWorkbook();
-                HSSFSheet sheet = wb.createSheet("Honoraires");
+        		File f = new File(jtf_file.getText()+".xls");
+        		if(!f.isFile()) { 
+        			System.out.println("Le fichier n'existe PAS");
+        			
+        			try {
+        				HSSFWorkbook wb = new HSSFWorkbook();
+        				HSSFSheet sheet = wb.createSheet("Honoraires");
+        				
+        				// ######### La ligne de titres
+        				
+        				HSSFRow row_ti = sheet.createRow(0);
+        				HSSFCellStyle cellStyle_titre;
+        				
+        				cellStyle_titre = wb.createCellStyle();
+    	                cellStyle_titre.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    	                cellStyle_titre.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_titre.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_titre.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_titre.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+        				
+        				HSSFCell cell_ti = null;
+    	                cell_ti = row_ti.createCell((short)0, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("NOM")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)1, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("IFA")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)2, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("IK")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)3, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("AMI 1")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)4, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("AMI 2")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)5, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("AIS")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)6, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("MAU")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)7, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("MCI")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)8, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("Dim. Jour ferié")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)9, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("Nuit")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                cell_ti = row_ti.createCell((short)10, HSSFCell.CELL_TYPE_STRING);
+    	                cell_ti.setCellValue(new HSSFRichTextString("Total (€)")); 
+    	                cell_ti.setCellStyle(cellStyle_titre);
+    	                
+    	                
+    	                // ########## Le reste
+    	                
+    	                HSSFRow row = sheet.createRow(1);
+    	                
+    	                HSSFCellStyle cellStyle;
+        				cellStyle = wb.createCellStyle();
+    	                cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    	                cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+    	                cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+    	                
+    	                HSSFCell cell = null;
+    	                cell = row.createCell((short)0, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(name)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)1, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(ifa_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)2);
+        				cell.setCellValue(0.35*ik);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)3);
+        				cell.setCellValue(3.15*ami1);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)4);
+        				cell.setCellValue(3.15*ami2);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)5);
+        				cell.setCellValue(2.65*ais);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)6, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(mau_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)7, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(mci_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)8, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(jfd_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)9, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(nuit_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                
+        				HSSFCellStyle cellStyle_fin;
+    	                cellStyle_fin = wb.createCellStyle();
+    	                cellStyle_fin.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    	                cellStyle_fin.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_fin.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_fin.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+    	                
+    	                cell = row.createCell((short)10);
+        				cell.setCellValue(calc);
+        				cellStyle_fin.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle_fin);
+        				
+        				FileOutputStream fileOut;
+        				fileOut = new FileOutputStream(jtf_file.getText()+".xls");
+		                wb.write(fileOut);
+		                fileOut.close();
                 
-                //////////// PREMIERE LIGNE
-                HSSFRow row_ti = sheet.createRow(0); //Ligne des strings
-                HSSFCellStyle cellStyle_titre;
-                
-                cellStyle_titre = wb.createCellStyle();
-                cellStyle_titre.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-                cellStyle_titre.setBorderTop(HSSFCellStyle.BORDER_DOUBLE);
-                cellStyle_titre.setBorderBottom(HSSFCellStyle.BORDER_DOUBLE);
-                cellStyle_titre.setBorderRight(HSSFCellStyle.BORDER_DOUBLE);
-                cellStyle_titre.setBorderLeft(HSSFCellStyle.BORDER_DOUBLE);
+        			} catch (IOException e) {
+        				e.printStackTrace();
+        			}	
+        		} else {
+        			System.out.println("Le fichier existe");	
+        			
+        			try {
+        				FileInputStream inp = new FileInputStream(jtf_file.getText()+".xls");
+        				HSSFWorkbook wb = new HSSFWorkbook(inp);
+        				HSSFSheet sheet = wb.getSheetAt(0);
+        				
+        				HSSFRow row; 
+        				HSSFCell cell;
 
-                HSSFCell cell_ti = null;
-                cell_ti = row_ti.createCell((short)0, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("NOM")); 
-                cell_ti.setCellStyle(cellStyle_titre);
+        				Iterator rowit = sheet.rowIterator();
+        				int cpt = 1;
+        				while (rowit.hasNext()) {
+        					row=(HSSFRow) rowit.next();
+        					cpt++;
+        				}
+        				System.out.println("Nous sommes à la ligne numéro "+cpt);
+        				
+        				row = sheet.createRow(cpt-1);
+        			
+        				HSSFCellStyle cellStyle;
+        				cellStyle = wb.createCellStyle();
+    	                cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    	                cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+    	                cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+    	                
+    	                cell = row.createCell((short)0, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(name)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)1, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(ifa_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)2);
+        				cell.setCellValue(0.35*ik);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)3);
+        				cell.setCellValue(3.15*ami1);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)4);
+        				cell.setCellValue(3.15*ami2);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)5);
+        				cell.setCellValue(2.65*ais);
+    	                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)6, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(mau_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)7, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(mci_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)8, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(jfd_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                cell = row.createCell((short)9, HSSFCell.CELL_TYPE_STRING);
+    	                cell.setCellValue(new HSSFRichTextString(nuit_n)); 
+    	                cell.setCellStyle(cellStyle);
+    	                
+    	                
+        				HSSFCellStyle cellStyle_fin;
+    	                cellStyle_fin = wb.createCellStyle();
+    	                cellStyle_fin.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    	                cellStyle_fin.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_fin.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+    	                cellStyle_fin.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+    	                
+    	                cell = row.createCell((short)10);
+        				cell.setCellValue(calc);
+        				cellStyle_fin.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+    	                cell.setCellStyle(cellStyle_fin);
+    	                
+    	                FileOutputStream fileOut;
+                    	fileOut = new FileOutputStream(jtf_file.getText()+".xls");
+                        wb.write(fileOut);
+                        fileOut.close();
                 
-                cell_ti = row_ti.createCell((short)1, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("IFA")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)2, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("IK")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)3, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("AMI 1")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)4, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("AMI 2")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)5, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("AIS")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)6, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("MAU")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)7, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("MCU")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)8, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("Dim. Jour ferié")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)9, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("Nuit")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                cell_ti = row_ti.createCell((short)10, HSSFCell.CELL_TYPE_STRING);
-                cell_ti.setCellValue(new HSSFRichTextString("Total (€)")); 
-                cell_ti.setCellStyle(cellStyle_titre);
-                
-                
-                ////////// Les chiffres (POUR L'INSTANT DES TESTS)
-                double a = 23.236548;
-                double b = 55.22562;
-                
-                int cpt = 1;
-                int cpt_test = 0;
-               
-                HSSFRow row_test = sheet.createRow(cpt);
-                /*
-                while (cpt_test == 0) {
-	                if(row_test.getCell(0) == null || row_test.getCell(0).getCellType() == HSSFCell.CELL_TYPE_BLANK) {
-		                cpt_test ++;
-		                System.out.println("## Ici ma cellule est VIDE donc on sort car cpt_test = "+cpt_test);
-	                } else {
-	                	cpt ++;
-	                	System.out.println("## Ici ma cellule n'est PAS vide donc cpt vaut maintenant "+cpt);
-	                }
-                }
-                */
-                if(row_test.getCell(0) == null || row_test.getCell(0).getCellType() == HSSFCell.CELL_TYPE_BLANK) {
-	                System.out.println("## Ici ma cellule est VIDE donc on sort car cpt_test = "+cpt_test);
-                } else {
-                	System.out.println("## Ici ma cellule n'est PAS vide donc cpt vaut maintenant "+cpt);
-                }
-                
-                System.out.println("# LE CPT = "+cpt);
-                HSSFCellStyle cellStyle = null;
-                HSSFCell cell_2 = null;
-                HSSFRow row = sheet.createRow(cpt);
-                
-                cell_2 = row.createCell((short)0);
-                cell_2.setCellValue(a);
-                cellStyle = wb.createCellStyle();
-                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
-                cell_2.setCellStyle(cellStyle);
-                
-                cell_2 = row.createCell((short)1);
-                cell_2.setCellValue(b);
-                cellStyle = wb.createCellStyle();
-                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
-                cell_2.setCellStyle(cellStyle);
-                
-                cell_2 = row.createCell((short)2);
-                cell_2.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                cell_2.setCellFormula("SUM(A2:B2)");
-                cellStyle = wb.createCellStyle();
-                cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
-                cell_2.setCellStyle(cellStyle);
-	            
-/*
-                HSSFCell cell2 = row2.createCell((short)0);
-                cell2.setCellValue(DECIMAL_FORMAT.format());
-                HSSFCellStyle cellStyle2 = wb.createCellStyle();
-                cellStyle2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-                cellStyle2.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
-                cellStyle2.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
-                cellStyle2.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
-                cell2.setCellStyle(cellStyle2);
-                
-                HSSFCell cell3 = row1.createCell((short)1, HSSFCell.CELL_TYPE_STRING);
-                cell3.setCellValue(new HSSFRichTextString("string"));
-                HSSFCellStyle cellStyle3 = wb.createCellStyle();
-                cellStyle3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-                cellStyle3.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
-                cell3.setCellStyle(cellStyle3);
-                
-                HSSFCell cell4 = row1.createCell((short) 3);
-                //cell4.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                //cell4.setCellFormula(c);
-                cell4.setCellValue(DECIMAL_FORMAT.format());
-                HSSFCellStyle cellStyle4 = wb.createCellStyle();
-                cellStyle4.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-                cellStyle4.setBorderTop(HSSFCellStyle.BORDER_MEDIUM_DASHED);
-                cellStyle4.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM_DASHED);
-                cellStyle4.setBorderRight(HSSFCellStyle.BORDER_MEDIUM_DASHED);
-                cellStyle4.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM_DASHED);
-                cellStyle4.setTopBorderColor(HSSFColor.RED.index);
-                cellStyle4.setBottomBorderColor(HSSFColor.RED.index);
-                cellStyle4.setRightBorderColor(HSSFColor.RED.index);
-                cellStyle4.setLeftBorderColor(HSSFColor.RED.index);
-                cell4.setCellStyle(cellStyle4);
-*/
-                
-                FileOutputStream fileOut;
-                    	
-                try {
-                	
-                	fileOut = new FileOutputStream(jtf_file.getText()+".xls");
-                    wb.write(fileOut);
-                    fileOut.close();
-                    
-                } catch (IOException e) {
-                    e.printStackTrace();
+        			} catch (IOException e) {
+        				e.printStackTrace();
+        			}	
         		}
         		
-        		
-        		
-        		
-        		
+    		
         		
 /*        		
         		try {
