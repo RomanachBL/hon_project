@@ -1,7 +1,10 @@
 package hon_project;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -13,6 +16,7 @@ public class Fenetre extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel panneau = new Panneau();
     private Form form = new Form();
+    
     
     // On récupère 'Left' et 'Right' grâce aux getters de la classe 'Form'
     JPanel left = form.getLeft();
@@ -26,13 +30,14 @@ public class Fenetre extends JFrame {
     	
     	// ***************** Fenetre *******************************************  
     	
-        this.setTitle("Ma fenêtre Java");
+        this.setTitle("Calculi");
         this.pack();
         JFrame.setDefaultLookAndFeelDecorated(true);
+        this.setSize(900, 700);
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         
         // ################  Partie placement / Layout !  #########################
 
@@ -41,13 +46,13 @@ public class Fenetre extends JFrame {
 
 		// On donne les dimensions de 'panneau', 'left' et 'right'
         panneau.setBounds(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
-        left.setBounds(130, 150, 350, 600); 
+        left.setBounds(150, 140, 350, 750); 
         //right.setBounds(0, 100, (int) dim.getWidth(), 50);
 
 		// On dit que left sera un GridLayout
         GridLayout grid = new GridLayout(15, 0);
         left.setLayout(grid);
-        grid.setVgap(15);
+        grid.setVgap(25);
 
      	// ############################# END #######################################
      	

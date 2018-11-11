@@ -333,7 +333,7 @@ public class Form {
     	                cell_ti.setCellStyle(cellStyle_titre);
     	                
     	                cell_ti = row_ti.createCell((short)9, HSSFCell.CELL_TYPE_STRING);
-    	                cell_ti.setCellValue(new HSSFRichTextString("â‚¬")); 
+    	                cell_ti.setCellValue(new HSSFRichTextString("€")); 
     	                cell_ti.setCellStyle(cellStyle_titre);
     	                
     	                // ########## Le reste
@@ -459,6 +459,7 @@ public class Form {
         				
         				FileOutputStream fileOut;
         				fileOut = new FileOutputStream(jtf_file.getText()+".xls");
+        				//fileOut = new FileOutputStream("C:\\Users\\Romain\\Documents\\Prog\\"+jtf_file.getText()+".xls");
 		                wb.write(fileOut);
 		                fileOut.close();
                 
