@@ -20,7 +20,7 @@ public class Fenetre extends JFrame {
     
     // On récupère 'Left' et 'Right' grâce aux getters de la classe 'Form'
     JPanel left = form.getLeft();
-    //JPanel right = form.getRight();
+    JPanel patients = form.getPat();
     
     public Fenetre(){
     	
@@ -46,13 +46,13 @@ public class Fenetre extends JFrame {
 
 		// On donne les dimensions de 'panneau', 'left' et 'right'
         panneau.setBounds(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
-        left.setBounds(150, 140, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)); 
-        //right.setBounds(0, 100, (int) dim.getWidth(), 50);
+        left.setBounds(120, 105, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)); 
+        patients.setBounds((int) (dim.getWidth()*0.35), 0, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)/2); 
 
 		// On dit que left sera un GridLayout
-        GridLayout grid = new GridLayout(15, 0);
-        left.setLayout(grid);
-        grid.setVgap(25);
+       // GridLayout grid = new GridLayout(15, 0);
+       // left.setLayout(grid);
+       // grid.setVgap(25);
 
      	// ############################# END #######################################
      	
@@ -60,7 +60,7 @@ public class Fenetre extends JFrame {
         // ***************** On 'add' tout dans le container  **********************
         container.add(panneau);  
         container.add(left, new Integer(1));
-        //container.add(right, new Integer(1));
+        container.add(patients, new Integer(1));
         
         // *************************************************************************
         
