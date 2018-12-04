@@ -37,7 +37,7 @@ public class Panneau extends JPanel {
         Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.07f);
         g2d.setComposite(c);
         
-        Font font2 = new Font("Times New Roman", Font.BOLD, 125);
+        Font font2 = new Font("Times New Roman", Font.BOLD, 170);
         g2d.setFont(font2);
         g2d.setColor(Color.BLACK);   
         AffineTransform affinetransform = new AffineTransform();     
@@ -45,7 +45,7 @@ public class Panneau extends JPanel {
         int textwidth = (int)(font2.getStringBounds("CALCULI", frc).getWidth());
         //int textheight = (int)(font2.getStringBounds("CALCULI", frc).getHeight());
         //System.out.println(textwidth);
-        g2d.drawString("CALCULI", (width - textwidth)/2, height/2);
+        g2d.drawString("CALCULI", (int) ((width - textwidth)/1.07), (int) (height/1.12));
         
         
          

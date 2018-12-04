@@ -46,7 +46,7 @@ public class Fenetre extends JFrame {
 
 		// On donne les dimensions de 'panneau', 'left' et 'right'
         panneau.setBounds(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
-        left.setBounds(120, 105, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)); 
+        left.setBounds(110, 105, 550, (int) (dim.getHeight()*0.70)); 
         patients.setBounds((int) (dim.getWidth()*0.35), 0, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)/2); 
 
 		// On dit que left sera un GridLayout
