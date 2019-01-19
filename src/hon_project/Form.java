@@ -333,7 +333,7 @@ public class Form {
         c.insets = new Insets(0,0,20,30);
         label_file.setFont(police_label);
         jtf_file.setFont(police);
-        jtf_file.setPreferredSize(new Dimension(140, 20));    
+        jtf_file.setPreferredSize(new Dimension(200, 20));    
         
         c.gridx = 0;
         c.gridy = 11;

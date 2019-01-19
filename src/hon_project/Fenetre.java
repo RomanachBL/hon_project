@@ -33,7 +33,7 @@ public class Fenetre extends JFrame {
         this.setTitle("Calculi");
         this.pack();
         JFrame.setDefaultLookAndFeelDecorated(true);
-        this.setSize(900, 700);
+        this.setSize(800, 600);
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,13 +46,9 @@ public class Fenetre extends JFrame {
 
 		// On donne les dimensions de 'panneau', 'left' et 'right'
         panneau.setBounds(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
-        left.setBounds(110, 105, 550, (int) (dim.getHeight()*0.70)); 
-        patients.setBounds((int) (dim.getWidth()*0.35), 0, (int) (dim.getWidth()*0.23), (int) (dim.getHeight()*0.70)/2); 
+        left.setBounds(100, 150, 450, 615); 
+        patients.setBounds(700, 150, 300, 25); 
 
-		// On dit que left sera un GridLayout
-       // GridLayout grid = new GridLayout(15, 0);
-       // left.setLayout(grid);
-       // grid.setVgap(25);
 
      	// ############################# END #######################################
      	

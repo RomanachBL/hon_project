@@ -29,7 +29,7 @@ public class Panneau extends JPanel {
     	Font font = new Font("Times New Roman", Font.BOLD, 30);
         g.setFont(font);
         g.setColor(Color.BLACK);          
-        g.drawString("Honoraires :", 150, 100); 
+        g.drawString("Honoraires :", 100, 100); 
         
     	
         Graphics2D g2d = (Graphics2D) g;
